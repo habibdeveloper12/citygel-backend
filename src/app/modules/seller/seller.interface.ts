@@ -1,6 +1,7 @@
-import { Model } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 
 export type ISeller = {
+  _id: mongoose.Types.ObjectId;
   id: string;
   fullName: string;
   phoneNumber: string;
@@ -11,6 +12,8 @@ export type ISeller = {
   marketing: boolean;
   role?: string;
   profileImage?: string;
+  ads?: Schema.Types.ObjectId[];
+  membership: Schema.Types.ObjectId;
 };
 export type SellerModel = {
   isUserExist(email: string): Promise<Pick<ISeller, 'email' | 'role'>>;

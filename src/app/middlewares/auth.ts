@@ -11,13 +11,18 @@ const auth =
     try {
       //get authorization token
       const token = req.headers.authorization;
+      console.log(token);
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
       }
       // verify token
       let verifiedUser = null;
-
-      verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+      const beararToken = token.split(' ')[1];
+      console.log(beararToken);
+      verifiedUser = jwtHelpers.verifyToken(
+        beararToken,
+        config.jwt.secret as Secret
+      );
 
       req.user = verifiedUser; // role  , userid
 

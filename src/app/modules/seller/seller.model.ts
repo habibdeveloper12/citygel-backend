@@ -45,6 +45,17 @@ export const SellerSchema = new Schema<ISeller, SellerModel>(
     profileImage: {
       type: String,
     },
+    membership: {
+      type: Schema.Types.ObjectId,
+      ref: 'Membership',
+      default: 'starter',
+    },
+    ads: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Ads',
+      },
+    ],
   },
   {
     timestamps: true,

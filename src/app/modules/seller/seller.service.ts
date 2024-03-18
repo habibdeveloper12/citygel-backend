@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
+import { Ads } from '../ads/ads.model';
 import { Validation } from '../auth/velidation.model';
-import { User } from '../user/user.model';
 import { generateSellerId } from '../user/user.utils';
 import { ISeller } from './seller.interface';
 import { Seller } from './seller.model';
@@ -66,6 +66,13 @@ import { Seller } from './seller.model';
 //     data: result,
 //   };
 // };
+const getAllSellers = async (): Promise<ISeller[]> => {
+  const allSeller = Seller.find({}).populate({
+    path: 'ads',
+    model: 'Ads',
+  });
+  return allSeller;
+};
 const createSeller = async (seller: ISeller): Promise<ISeller | null> => {
   console.log(seller);
   const { email, fullName, phoneNumber, terms, code, marketing } = seller;
@@ -115,78 +122,94 @@ const createSeller = async (seller: ISeller): Promise<ISeller | null> => {
   return newSeller;
 };
 
-const getSingleSeller = async (id: string): Promise<ISeller | null> => {
-  const result = await Seller.findOne({ id })
-    .populate('academicSemester')
-    .populate('academicDepartment')
-    .populate('academicFaculty');
+const getSingleSeller = async (email: string): Promise<ISeller | null> => {
+  const result = await Seller.findOne({ email }).populate({
+    path: 'ads',
+    model: 'Ads',
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Seller not found!');
+  }
   return result;
 };
 
 const updateSeller = async (
-  id: string,
+  email: string,
   payload: Partial<ISeller>
 ): Promise<ISeller | null> => {
-  const isExist = await Seller.findOne({ id });
+  const isExist = await Seller.findOne({ email: email });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Seller not found !');
   }
 
-  const { name, guardian, localGuardian, ...SellerData } = payload;
+  const { fullName, role, ...SellerData } = payload;
 
-  const updatedSellerData: Partial<ISeller> = { ...SellerData };
+  const updatedSellerData: Partial<ISeller> = { fullName, role, ...SellerData };
 
-  if (name && Object.keys(name).length > 0) {
-    Object.keys(name).forEach(key => {
-      const nameKey = `name.${key}` as keyof Partial<ISeller>; // `name.fisrtName`
-      (updatedSellerData as any)[nameKey] = name[key as keyof typeof name];
-    });
-  }
-  if (guardian && Object.keys(guardian).length > 0) {
-    Object.keys(guardian).forEach(key => {
-      const guardianKey = `guardian.${key}` as keyof Partial<ISeller>; // `guardian.fisrtguardian`
-      (updatedSellerData as any)[guardianKey] =
-        guardian[key as keyof typeof guardian];
-    });
-  }
-  if (localGuardian && Object.keys(localGuardian).length > 0) {
-    Object.keys(localGuardian).forEach(key => {
-      const localGuradianKey = `localGuardian.${key}` as keyof Partial<ISeller>; // `localGuardian.fisrtName`
-      (updatedSellerData as any)[localGuradianKey] =
-        localGuardian[key as keyof typeof localGuardian];
-    });
-  }
+  // if (name && Object.keys(name).length > 0) {
+  //   Object.keys(name).forEach(key => {
+  //     const nameKey = `name.${key}` as keyof Partial<ISeller>; // `name.fisrtName`
+  //     (updatedSellerData as any)[nameKey] = name[key as keyof typeof name];
+  //   });
+  // }
+  // if (guardian && Object.keys(guardian).length > 0) {
+  //   Object.keys(guardian).forEach(key => {
+  //     const guardianKey = `guardian.${key}` as keyof Partial<ISeller>; // `guardian.fisrtguardian`
+  //     (updatedSellerData as any)[guardianKey] =
+  //       guardian[key as keyof typeof guardian];
+  //   });
+  // }
+  // if (localGuardian && Object.keys(localGuardian).length > 0) {
+  //   Object.keys(localGuardian).forEach(key => {
+  //     const localGuradianKey = `localGuardian.${key}` as keyof Partial<ISeller>; // `localGuardian.fisrtName`
+  //     (updatedSellerData as any)[localGuradianKey] =
+  //       localGuardian[key as keyof typeof localGuardian];
+  //   });
+  // }
 
-  const result = await Seller.findOneAndUpdate({ id }, updatedSellerData, {
+  const result = await Seller.findOneAndUpdate({ email }, updatedSellerData, {
     new: true,
   });
   return result;
 };
 
-const deleteSeller = async (id: string): Promise<ISeller | null> => {
-  // check if the Seller is exist
-  const isExist = await Seller.findOne({ id });
+const deleteSeller = async (
+  email: string,
+  newOwnerEmail: string
+): Promise<ISeller | null> => {
+  // Check if the Seller exists
+  const seller = await Seller.findOne({ email });
 
-  if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Seller not found !');
+  if (!seller) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Seller not found!');
   }
 
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
-    //delete Seller first
-    const Seller = await Seller.findOneAndDelete({ id }, { session });
-    if (!Seller) {
-      throw new ApiError(404, 'Failed to delete Seller');
+
+    // Find ads associated with the seller
+    const ads = await Ads.find({ seller: seller._id });
+
+    // Assign ads to the new owner
+    const newOwner = await Seller.findOne({ email: newOwnerEmail });
+
+    if (!newOwner) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'New owner not found!');
     }
-    //delete user
-    await User.deleteOne({ id });
+
+    await Ads.updateMany({ seller: seller._id }, { seller: newOwner._id });
+
+    // Delete the seller
+    await Seller.deleteOne({ email });
+
     session.commitTransaction();
     session.endSession();
 
-    return Seller;
+    return seller;
   } catch (error) {
     session.abortTransaction();
     throw error;
@@ -194,7 +217,7 @@ const deleteSeller = async (id: string): Promise<ISeller | null> => {
 };
 
 export const SellerService = {
-  // getAllSellers,
+  getAllSellers,
   createSeller,
   getSingleSeller,
   updateSeller,

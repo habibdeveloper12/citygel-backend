@@ -1,4 +1,5 @@
-import { Seller } from '../seller/seller.model';
+import { Ads } from '../ads/ads.model';
+import { Seller } from './seller.model';
 
 // Seller ID
 export const findLastSellerId = async (): Promise<string | undefined> => {
@@ -27,21 +28,20 @@ export const generateSellerId = async (): Promise<string> => {
 };
 
 // Faculty ID
-export const findLastFacultyId = async (): Promise<string | undefined> => {
-  const lastFaculty = await User.findOne({ role: 'faculty' }, { id: 1, _id: 0 })
+export const findAdsId = async (): Promise<string | undefined> => {
+  const lastAds = await Ads.findOne({ role: 'ads' }, { id: 1, _id: 0 })
     .sort({
       createdAt: -1,
     })
     .lean();
 
-  return lastFaculty?.id ? lastFaculty.id.substring(2) : undefined;
+  return lastAds?.id ? lastAds.id.substring(2) : undefined;
 };
 
-export const generateFacultyId = async (): Promise<string> => {
-  const currentId =
-    (await findLastFacultyId()) || (0).toString().padStart(5, '0');
+export const generateAdsId = async (): Promise<string> => {
+  const currentId = (await findAdsId()) || (0).toString().padStart(5, '0');
   let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0');
-  incrementedId = `F-${incrementedId}`;
+  incrementedId = `ads-${incrementedId}`;
 
   return incrementedId;
 };

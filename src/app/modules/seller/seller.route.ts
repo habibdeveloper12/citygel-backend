@@ -5,38 +5,31 @@ import { SellerController } from './seller.controller';
 const router = express.Router();
 
 router.get(
-  '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  '/:email',
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
   SellerController.getSingleSeller
 );
 router.delete(
-  '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  '/:email',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.SELLER),
   SellerController.deleteSeller
 );
 
-// router.patch(
-//   '/:id',
-//   validateRequest(SellerValidaion.updateSellerZodSchema),
-//   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-//   SellerController.updateSeller
-// );
-// router.get(
-//   '/',
-//   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-//   SellerController.getAllSellers
-// );
+router.patch(
+  '/:email',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
+  SellerController.updateSeller
+);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
+  SellerController.getAllSellers
+);
 router.post(
   '/create-user',
   // validateRequest(SellerZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
   SellerController.createSeller
-);
-router.post(
-  '/login',
-  // validateRequest(SellerZodSchema),
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  SellerController.loginSeller
 );
 
 export const SellerRoutes = router;
