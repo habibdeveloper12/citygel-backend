@@ -24,7 +24,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
-
+  console.log(email, code);
   const verification = await Validation.findOne({ email, code }).exec();
   if (!verification) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wrong code you entered');
@@ -32,6 +32,39 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const alreadyUser = await Seller.findOne({ email: email });
   if (!alreadyUser) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please create your account');
+  }
+
+  const { email: userId, role } = isUserExist;
+  const accessToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  const refreshToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+const googgleLogin = async (payload: {
+  email: string;
+}): Promise<ILoginUserResponse> => {
+  const { email } = payload;
+  // creating instance of User
+  // const user = new User();
+  //  // access to our instance methods
+  //   const isUserExist = await user.isUserExist(id);
+  console.log(payload);
+  const isUserExist = await Seller.isUserExist(email);
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
 
   const { email: userId, role } = isUserExist;
@@ -91,6 +124,7 @@ const sendCode = async (payload: any): Promise<any> => {
 };
 const verifyCode = async (payload: any): Promise<any> => {
   const { email, code } = payload;
+  console.log(email, code, 'dfffffffffffffff');
   try {
     const verification = await Validation.findOne({ email, code }).exec();
 
@@ -120,7 +154,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   // tumi delete hye gso  kintu tumar refresh token ase
   // checking deleted user's refresh token
 
-  const isUserExist = await User.isUserExist(userId);
+  const isUserExist = await Seller.isUserExist(userId);
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
@@ -128,7 +162,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const newAccessToken = jwtHelpers.createToken(
     {
-      id: isUserExist.id,
+      userId: isUserExist.email,
       role: isUserExist.role,
     },
     config.jwt.secret as Secret,
@@ -192,5 +226,5 @@ export const AuthService = {
   verifyCode,
   sendCode,
   refreshToken,
-  // changePassword,
+  googgleLogin,
 };

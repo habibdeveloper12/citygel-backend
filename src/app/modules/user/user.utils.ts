@@ -1,10 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Seller } from '../seller/seller.model';
-
 // Seller ID
 export const findLastSellerId = async (): Promise<string | undefined> => {
   const lastSeller = await Seller.findOne(
     {
-      role: 'Seller',
+      role: 'seller',
     },
     { id: 1, _id: 0 }
   )
@@ -16,14 +16,14 @@ export const findLastSellerId = async (): Promise<string | undefined> => {
   return lastSeller?.id ? lastSeller.id.substring(4) : undefined;
 };
 
-export const generateSellerId = async (): Promise<string> => {
-  const currentId =
-    (await findLastSellerId()) || (0).toString().padStart(5, '0'); //00000
-  //increment by 1
-  let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0');
-  //20 25
+export const generateSellerId = (fullName: string): string => {
+  // Generate a new UUID (v4)
+  const newId = uuidv4();
 
-  return incrementedId;
+  // Extract only the last 5 characters to match the desired format
+  const formattedId = newId.substr(newId.length - 5) + fullName.trim();
+
+  return formattedId;
 };
 
 // Faculty ID

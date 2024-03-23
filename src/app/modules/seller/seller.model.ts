@@ -48,7 +48,6 @@ export const SellerSchema = new Schema<ISeller, SellerModel>(
     membership: {
       type: Schema.Types.ObjectId,
       ref: 'Membership',
-      default: 'starter',
     },
     ads: [
       {

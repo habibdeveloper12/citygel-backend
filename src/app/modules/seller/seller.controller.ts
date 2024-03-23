@@ -1,19 +1,30 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
+import { ILoginUserResponse } from '../auth/auth.interface';
 import { ISeller } from './seller.interface';
 import { SellerService } from './seller.service';
 
 const createSeller = catchAsync(async (req: Request, res: Response) => {
   const { ...seller } = req.body;
   const result = await SellerService.createSeller(seller);
+  const { refreshToken, ...others } = result;
 
-  sendResponse<ISeller>(res, {
-    statusCode: httpStatus.OK,
+  // set refresh token into cookie
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
+
+  res.cookie('refreshToken', refreshToken, cookieOptions);
+
+  sendResponse<ILoginUserResponse>(res, {
+    statusCode: 200,
     success: true,
-    message: 'Seller Created successfully !',
-    data: result,
+    message: 'User logged in successfully !',
+    data: others,
   });
 });
 
@@ -71,10 +82,33 @@ const deleteSeller = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createConfirmSeller = catchAsync(async (req: Request, res: Response) => {
+  const { ...seller } = req.body;
+  const result = await SellerService.createConfirmSeller(seller);
+
+  const { refreshToken, ...others } = result;
+
+  // set refresh token into cookie
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
+
+  res.cookie('refreshToken', refreshToken, cookieOptions);
+
+  sendResponse<ILoginUserResponse>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Seller Created successfully !',
+    data: others,
+  });
+});
+
 export const SellerController = {
   getSingleSeller,
   getAllSellers,
   updateSeller,
+  createConfirmSeller,
   deleteSeller,
   createSeller,
 };

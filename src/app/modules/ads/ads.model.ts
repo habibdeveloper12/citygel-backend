@@ -39,10 +39,10 @@ export const AdsSchema = new Schema<IAds, AdsModel>(
       type: String,
     },
     kmDriven: {
-      type: Number,
+      type: String,
     },
     owners: {
-      type: Number,
+      type: String,
     },
     title: {
       type: String,
@@ -68,7 +68,7 @@ export const AdsSchema = new Schema<IAds, AdsModel>(
     enquiryType: {
       type: String,
     },
-    mainImg: {
+    mainImage: {
       type: String,
     },
     email: {
@@ -79,7 +79,7 @@ export const AdsSchema = new Schema<IAds, AdsModel>(
       ref: 'Seller',
       required: true,
     },
-    moreImg: {
+    moreImages: {
       type: [String],
     },
   },

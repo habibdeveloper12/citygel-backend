@@ -31,5 +31,11 @@ router.post(
   // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
   SellerController.createSeller
 );
+router.post(
+  '/create-user-confirm',
+  // validateRequest(SellerZodSchema),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
+  SellerController.createConfirmSeller
+);
 
 export const SellerRoutes = router;

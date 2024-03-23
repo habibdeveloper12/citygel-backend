@@ -6,8 +6,8 @@ import { ISubcategory } from '../subcategory/subcategory.interface';
 export type IAds = {
   _id: mongoose.Types.ObjectId;
   id: string;
-  category: Schema.Types.ObjectId | ICategory;
-  seller: Schema.Types.ObjectId | ISeller;
+  category: Schema.Types.ObjectId | ICategory | string;
+  seller: Schema.Types.ObjectId | ISeller | string;
   subcategory?: Schema.Types.ObjectId | ISubcategory;
   type?: string;
   brand?: string;
@@ -26,8 +26,8 @@ export type IAds = {
   city?: string;
   email: string;
   enquiryType?: string;
-  mainImg?: string;
-  moreImg?: string[];
+  mainImage?: string;
+  moreImages?: string[];
 };
 export type AdsModel = {
   isUserExist(email: string): Promise<Pick<IAds, 'id'>>;
@@ -47,6 +47,8 @@ export interface AdsFilterableFields {
   id?: boolean;
   city?: boolean;
   price?: boolean;
-  category?: boolean;
-  subcategory?: boolean;
+  maxPrice?: number;
+  minPrice?: number;
+  category?: string | Schema.Types.ObjectId;
+  subcategory?: string | Schema.Types.ObjectId;
 }

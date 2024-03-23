@@ -5,8 +5,10 @@ import { PaginationFields } from '../../../constants/pagination';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
+import { Category } from '../category/category.model';
 import { Seller } from '../seller/seller.model';
 import { generateAdsId } from '../seller/seller.utils';
+import { Subcategory } from '../subcategory/subcategory.model';
 import { adsSearchableFields } from './ads.constant';
 import { AdsFilterableFields, IAds } from './ads.interface';
 import { Ads } from './ads.model';
@@ -72,10 +74,18 @@ const getAllAds = async (
   filters: AdsFilterableFields,
   paginationOptions: PaginationFields
 ): Promise<IGenericResponse<IAds[]>> => {
-  const { searchTerm, ...filtersData } = filters;
+  const {
+    searchTerm,
+    minPrice,
+    maxPrice,
+    category,
+    subcategory,
+    ...filtersData
+  } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
-
+  if (!category) {
+  }
   const andConditions = [];
   // Search needs $or for searching in specified fields
   if (searchTerm) {
@@ -88,16 +98,22 @@ const getAllAds = async (
       })),
     });
   }
-  // Filters needs $and to fullfill all the conditions
-  if (Object.keys(filtersData).length) {
+  if (minPrice !== undefined && maxPrice !== undefined) {
     andConditions.push({
-      $and: Object.entries(filtersData).map(([field, value]) => ({
-        [field]: value,
-      })),
+      price: { $gte: minPrice, $lte: maxPrice },
     });
   }
 
-  // Dynamic  Sort needs  field to  do sorting
+  if (Object.keys(filtersData).length) {
+    const fieldConditions = Object.entries(filtersData).map(
+      ([field, value]) => ({
+        [field]: value,
+      })
+    );
+
+    andConditions.push(...fieldConditions);
+  }
+
   const sortConditions: { [key: string]: SortOrder } = {};
   if (sortBy && sortOrder) {
     sortConditions[sortBy] = sortOrder;
@@ -106,8 +122,11 @@ const getAllAds = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Ads.find(whereConditions)
-    .populate('category')
-    .populate('subcategory')
+    .populate({ path: 'category', match: category ? { name: category } : {} })
+    .populate({
+      path: 'subcategory',
+      match: subcategory ? { name: subcategory } : {},
+    })
     .populate('seller')
     .sort(sortConditions)
     .skip(skip)
@@ -136,8 +155,8 @@ const createAds = async (email: string, ads: IAds): Promise<IAds | null> => {
     model,
     manufacturingYear,
     fuelType,
-    moreImg,
-    mainImg,
+    mainImage,
+    moreImages,
     enquiryType,
     city,
     state,
@@ -157,18 +176,21 @@ const createAds = async (email: string, ads: IAds): Promise<IAds | null> => {
 
   try {
     session.startTransaction();
-
+    console.log(ads);
     // generate ad id
     const id = await generateAdsId();
     ads.id = id;
 
     // Find the seller by email
     const seller = await Seller.findOne({ email: email });
+    const category = await Category.findOne({ name: 'electric' });
+    const subcategory = await Subcategory.findOne({ name: ads.subcategory });
 
     if (!seller) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Your Account is not created');
     }
-
+    ads.category = category?._id as any;
+    ads.subcategory = subcategory?._id as any;
     ads.email = email;
     ads.seller = seller._id.toString() as any;
     console.log(ads, seller);

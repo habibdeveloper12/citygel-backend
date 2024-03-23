@@ -14,7 +14,8 @@ export const adsFilterableFields = [
   'searchTerm',
   'id',
   'city',
-  'price',
+  'minPrice',
+  'maxPrice',
   'category',
   'subcategory',
 ];

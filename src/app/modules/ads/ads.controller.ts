@@ -39,7 +39,7 @@ const getSingleAds = catchAsync(async (req: Request, res: Response) => {
 const getAllAds = catchAsync(async (req: Request, res: Response) => {
   const filters: AdsFilterableFields = pick(req.query, adsFilterableFields);
   const paginationOptions: PaginationFields = pick(req.query, paginationFields);
-
+  console.log(filters, paginationOptions);
   const result = await AdsService.getAllAds(filters, paginationOptions);
 
   sendResponse<IAds[]>(res, {

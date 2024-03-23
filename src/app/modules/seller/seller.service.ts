@@ -2,9 +2,12 @@
 import mongoose from 'mongoose';
 
 import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { Ads } from '../ads/ads.model';
-import { Validation } from '../auth/velidation.model';
+import { ILoginUserResponse } from '../auth/auth.interface';
 import { generateSellerId } from '../user/user.utils';
 import { ISeller } from './seller.interface';
 import { Seller } from './seller.model';
@@ -73,22 +76,25 @@ const getAllSellers = async (): Promise<ISeller[]> => {
   });
   return allSeller;
 };
-const createSeller = async (seller: ISeller): Promise<ISeller | null> => {
+const createSeller = async (seller: ISeller): Promise<ILoginUserResponse> => {
   console.log(seller);
   const { email, fullName, phoneNumber, terms, code, marketing } = seller;
   let newSeller = null;
+  let accessToken = '';
+  let refreshToken = '';
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
     // generate student id
-    const id = await generateSellerId();
+    const id = generateSellerId(fullName);
     // set custom id into both  student & user
     seller.id = id;
     console.log(seller);
-    const verification = await Validation.findOne({ email, code }).exec();
-    if (!verification) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Wrong code you entered');
-    }
+    // const verification = await Validation.findOne({ email, code }).exec();
+    // if (!verification) {
+    //   throw new ApiError(httpStatus.BAD_REQUEST, 'Wrong code you entered');
+    // }
     const alreadyUser = await Seller.findOne({ email: email });
     if (alreadyUser) {
       throw new ApiError(
@@ -114,12 +120,89 @@ const createSeller = async (seller: ISeller): Promise<ISeller | null> => {
 
     await session.commitTransaction();
     await session.endSession();
+    accessToken = jwtHelpers.createToken(
+      { userId: newSeller.email, role: newSeller.role },
+      config.jwt.secret as Secret,
+      config.jwt.expires_in as string
+    );
+
+    refreshToken = jwtHelpers.createToken(
+      { userId: newSeller.email, role: newSeller.role },
+      config.jwt.refresh_secret as Secret,
+      config.jwt.refresh_expires_in as string
+    );
+    return {
+      accessToken,
+      refreshToken,
+    };
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
     throw error;
   }
-  return newSeller;
+};
+const createConfirmSeller = async (
+  seller: ISeller
+): Promise<ILoginUserResponse> => {
+  console.log(seller);
+  const { email, fullName, phoneNumber, terms, code, marketing } = seller;
+  let newSeller = null;
+  let accessToken = '';
+  let refreshToken = '';
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    // generate student id
+    const id = generateSellerId(fullName);
+    // set custom id into both  student & user
+    seller.id = id;
+    console.log(seller);
+
+    const alreadyUser = await Seller.findOne({ email: email });
+    if (alreadyUser) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Your Account is already Created'
+      );
+    }
+    const userSeller = {
+      id,
+      fullName,
+      phoneNumber,
+      terms: true,
+      marketing,
+      email,
+      firstVerify: true,
+    };
+    const updateSeller = await Seller.create([userSeller], { session });
+
+    if (!updateSeller.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create seller');
+    }
+    newSeller = updateSeller[0];
+
+    await session.commitTransaction();
+    await session.endSession();
+    accessToken = jwtHelpers.createToken(
+      { userId: newSeller.email, role: newSeller.role },
+      config.jwt.secret as Secret,
+      config.jwt.expires_in as string
+    );
+
+    refreshToken = jwtHelpers.createToken(
+      { userId: newSeller.email, role: newSeller.role },
+      config.jwt.refresh_secret as Secret,
+      config.jwt.refresh_expires_in as string
+    );
+    return {
+      accessToken,
+      refreshToken,
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
 };
 
 const getSingleSeller = async (email: string): Promise<ISeller | null> => {
@@ -222,4 +305,5 @@ export const SellerService = {
   getSingleSeller,
   updateSeller,
   deleteSeller,
+  createConfirmSeller,
 };

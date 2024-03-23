@@ -1,6 +1,5 @@
-import { Ads } from '../ads/ads.model';
+import { v4 as uuidv4 } from 'uuid';
 import { Seller } from './seller.model';
-
 // Seller ID
 export const findLastSellerId = async (): Promise<string | undefined> => {
   const lastSeller = await Seller.findOne(
@@ -29,13 +28,10 @@ export const generateSellerId = async (): Promise<string> => {
 
 // Faculty ID
 export const findAdsId = async (): Promise<string | undefined> => {
-  const lastAds = await Ads.findOne({ role: 'ads' }, { id: 1, _id: 0 })
-    .sort({
-      createdAt: -1,
-    })
-    .lean();
+  const newId = uuidv4();
+  const lastAds = newId.substr(newId.length - 5);
 
-  return lastAds?.id ? lastAds.id.substring(2) : undefined;
+  return lastAds;
 };
 
 export const generateAdsId = async (): Promise<string> => {
