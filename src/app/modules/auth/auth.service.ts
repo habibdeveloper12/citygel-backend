@@ -89,11 +89,12 @@ const sendCode = async (payload: any): Promise<any> => {
   const { email } = payload;
   const code = generateCode();
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
+    service: 'other',
+    host: 'smtp.hostinger.com',
+    port: 465,
     auth: {
-      user: 'justice.stroman@ethereal.email',
-      pass: 'Z5Pt2415tTm3n4CXKJ',
+      user: 'test@ctobbd.com',
+      pass: 'Habib12345@#',
     },
   });
   try {
@@ -101,7 +102,7 @@ const sendCode = async (payload: any): Promise<any> => {
     await verification.save();
 
     const mailOptions = {
-      from: 'habiburdeveloper7@gmail.com',
+      from: 'test@ctobbd.com',
       to: email,
       subject: 'Verification Code',
       text: `Your verification code is: ${code}`,
