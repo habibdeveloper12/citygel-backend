@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IMembership, MembershipModel } from './membership.interface';
+import { IMembership, MembershipModel } from './subscription.interface';
 
 export const membershipSchema = new Schema<IMembership, MembershipModel>({
   name: {

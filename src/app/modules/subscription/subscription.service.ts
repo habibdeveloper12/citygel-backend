@@ -3,8 +3,8 @@ import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { Seller } from '../seller/seller.model';
-import { IMembership } from './membership.interface';
-import { Membership } from './membership.model';
+import { IMembership } from './subscription.interface';
+import { Membership } from './subscription.model';
 
 const getAllMemberships = async (): Promise<IMembership[]> => {
   const allMembership = Membership.find({});

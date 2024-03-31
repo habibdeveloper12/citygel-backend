@@ -4,6 +4,7 @@ import { AdminRoutes } from '../modules/admin/admin.route';
 import { AdsRoutes } from '../modules/ads/ads.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { CategoryRoutes } from '../modules/category/category.route';
+import { FieldRoutes } from '../modules/field/field.route';
 import { MembershipRoutes } from '../modules/membership/membership.route';
 import { SellerRoutes } from '../modules/seller/seller.route';
 import { SubcategoryRoutes } from '../modules/subcategory/subcategory.route';
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: '/membership',
     route: MembershipRoutes,
+  },
+  {
+    path: '/field',
+    route: FieldRoutes,
   },
 ];
 
