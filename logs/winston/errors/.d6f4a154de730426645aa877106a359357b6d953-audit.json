@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/habiburrahman/Desktop/citygel/citygel-backend/logs/winston/errors/.d6f4a154de730426645aa877106a359357b6d953-audit.json",
+    "files": [
+        {
+            "date": 1711833285725,
+            "name": "/Users/habiburrahman/Desktop/citygel/citygel-backend/logs/winston/errors/phu-2024-31-03-03-error.log",
+            "hash": "9100f733f831a464d6ecb28e18af788832c68aeddfa5c662aa2f5ce7b368563a"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -1,0 +1,4 @@
+Sun Mar 31 2024 3:14:46 } [PH] error: Failed to connect database The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+Sun Mar 31 2024 3:15:37 } [PH] error: Failed to connect database The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+Sun Mar 31 2024 3:16:31 } [PH] error: Failed to connect database Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"
+Sun Mar 31 2024 3:17:49 } [PH] error: listen EADDRINUSE: address already in use :::5000
