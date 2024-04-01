@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Date, Model, Schema } from 'mongoose';
 
 export type ISeller = {
   _id: mongoose.Types.ObjectId;
@@ -14,6 +14,7 @@ export type ISeller = {
   profileImage?: string;
   ads?: Schema.Types.ObjectId[];
   membership: Schema.Types.ObjectId;
+  membershipExpiration: Date;
 };
 export type SellerModel = {
   isUserExist(email: string): Promise<Pick<ISeller, 'email' | 'role'>>;

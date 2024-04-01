@@ -28,6 +28,7 @@ export type IAds = {
   enquiryType?: string;
   mainImage?: string;
   moreImages?: string[];
+  status?:string
 };
 export type AdsModel = {
   isUserExist(email: string): Promise<Pick<IAds, 'id'>>;

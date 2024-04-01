@@ -31,5 +31,17 @@ router.post(
   // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   CountryController.createCountry
 );
+router.post(
+  '/add-state:name',
+  // validateRequest(CountryZodSchema),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CountryController.updateState,
+);
+router.delete(
+  '/add-state:name',
+  // validateRequest(CountryZodSchema),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CountryController.deleteState,
+);
 
 export const CountryRoutes = router;

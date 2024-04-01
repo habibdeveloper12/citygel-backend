@@ -2,6 +2,7 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import ApiError from '../../../errors/ApiError';
+import { Membership } from '../membership/membership.model';
 import { Seller } from '../seller/seller.model';
 import { IPayment } from './payment.interface';
 import { Payment } from './payment.model';
@@ -13,36 +14,20 @@ const getAllPayments = async (): Promise<IPayment[]> => {
   return allPayment;
 };
 const createPayment = async (paymentData: any): Promise<IPayment | null> => {
-  console.log(paymentData);
-  const { membershipType, email, token, save } = paymentData;
-
-  // Determine amount based on membership type
-  let amount = 0;
-  switch (membershipType) {
-    case 'starter':
-      amount = 5;
-      break;
-    case 'premium':
-      amount = 10;
-      break;
-    case 'professional':
-      amount = 20;
-      break;
-    default:
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid membership type');
-  }
+  const { membershipType, amount, email, token, save } = paymentData;
 
   let newPayment: IPayment | null = null;
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const findUser = await Seller.findOne({ email: email });
-
+    const findUser = await Seller.findOne({ email });
+    console.log(membershipType, amount);
     // Check if user exists
     if (!findUser) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
 
+    // Create payment with Stripe
     const charge = await stripe.charges.create({
       amount: amount * 100,
       currency: 'usd',
@@ -50,6 +35,7 @@ const createPayment = async (paymentData: any): Promise<IPayment | null> => {
       source: token.id,
     });
     console.log(charge);
+
     // Create a new payment document
     const userPayment = {
       paymentType: 'stripe',
@@ -67,7 +53,35 @@ const createPayment = async (paymentData: any): Promise<IPayment | null> => {
     if (!createdPayment.length) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create Payment');
     }
+
     newPayment = createdPayment[0];
+
+    // Fetch membership details
+    const membershipCheck = await Membership.findOne({ name: membershipType });
+
+    if (!membershipCheck) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Membership type not found');
+    }
+
+    // Calculate membership expiration date
+    const membershipExpiration = new Date();
+    membershipExpiration.setDate(
+      membershipExpiration.getDate() + membershipCheck.duration
+    );
+
+    // Update user's membership details
+    const updatedUser = await Seller.findOneAndUpdate(
+      { email },
+      {
+        membership: membershipCheck._id,
+        membershipExpiration,
+      },
+      { new: true, session }
+    );
+
+    if (!updatedUser) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
 
     await session.commitTransaction();
     await session.endSession();

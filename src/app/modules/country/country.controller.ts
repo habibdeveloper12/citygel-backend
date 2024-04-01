@@ -3,13 +3,13 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 
-import { CountryService } from './country.service';
 import { ICountry } from './country.interface';
+import { CountryService } from './country.service';
 
 const createCountry = catchAsync(async (req: Request, res: Response) => {
-  const { ...Country } = req.body;
-  const result = await CountryService.createCountry(Country);
-  console.log(Country, 'dffdf');
+  const { ...country } = req.body;
+  const result = await CountryService.createCountry(country);
+  console.log(country, 'dffdf');
   sendResponse<ICountry>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -59,6 +59,32 @@ const updateCountry = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateState = catchAsync(async (req: Request, res: Response) => {
+  const name = req.params.name;
+  const updatedData = req.body;
+
+  const result = await CountryService.updateState(name, updatedData);
+
+  sendResponse<ICountry>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Country updated successfully !',
+    data: result,
+  });
+});
+const deleteState = catchAsync(async (req: Request, res: Response) => {
+  const name = req.params.name;
+  const updatedData = req.body;
+
+  const result = await CountryService.updateState(name, updatedData);
+
+  sendResponse<ICountry>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Country Delete successfully !',
+    data: result,
+  });
+});
 const deleteCountry = catchAsync(async (req: Request, res: Response) => {
   const name = req.params.name;
 
@@ -75,7 +101,7 @@ const deleteCountry = catchAsync(async (req: Request, res: Response) => {
 export const CountryController = {
   getSingleCountry,
   getAllCountrys,
-  updateCountry,
+  updateCountry,updateState,
   deleteCountry,
-  createCountry,
+  createCountry,deleteState,
 };

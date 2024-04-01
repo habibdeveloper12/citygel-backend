@@ -62,6 +62,11 @@ export const AdsSchema = new Schema<IAds, AdsModel>(
     state: {
       type: String,
     },
+    status:{
+      type:String,
+      default:"pending",
+      enum:["pending","approved","reject"]
+    },
     city: {
       type: String,
     },

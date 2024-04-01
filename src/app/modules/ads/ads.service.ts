@@ -178,21 +178,27 @@ const createAds = async (email: string, ads: IAds): Promise<IAds | null> => {
     session.startTransaction();
     console.log(ads);
     // generate ad id
-    const id = await generateAdsId();
-    ads.id = id;
+    ads.id = await generateAdsId();;
 
     // Find the seller by email
-    const seller = await Seller.findOne({ email: email });
-    const category = await Category.findOne({ name: 'electric' });
+    const seller = await Seller.findOne({ email }).populate('membership');
+    const category = await Category.findOne({ name: ads.category });
     const subcategory = await Subcategory.findOne({ name: ads.subcategory });
 
     if (!seller) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Your Account is not created');
     }
+  
+    
+  
+    if ((!seller.membership) || (seller.membershipExpiration as any).getTime() < Date.now()) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'Your membership is expired or inactive');
+  }
+     
     ads.category = category?._id as any;
     ads.subcategory = subcategory?._id as any;
     ads.email = email;
-    ads.seller = seller._id.toString() as any;
+    ads.seller = seller._id as any;
     console.log(ads, seller);
     const createdAds = await Ads.create([ads], { session });
     const pushUser = await Seller.findOneAndUpdate(

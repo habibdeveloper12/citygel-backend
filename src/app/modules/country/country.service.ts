@@ -2,17 +2,17 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import ApiError from '../../../errors/ApiError';
-import { IAds } from '../ads/ads.interface';
 import { Ads } from '../ads/ads.model';
-import { Country } from './country.model';
+import { State } from '../state/state.model';
 import { ICountry } from './country.interface';
+import { Country } from './country.model';
 
 const getAllCountrys = async (): Promise<ICountry[]> => {
-  const allCategories = await Country.find({}).populate({
-    path: 'subcategories',
-    model: 'Subcountry',
+  const allCountry = await Country.find({}).populate({
+    path: 'state',
+    model: 'State',
   });
-  return allCategories;
+  return allCountry;
 };
 const createCountry = async (country: ICountry): Promise<ICountry | null> => {
   let newCountry: ICountry | null = null;
@@ -39,7 +39,7 @@ const createCountry = async (country: ICountry): Promise<ICountry | null> => {
 };
 
 const getSingleCountry = async (name: string): Promise<ICountry | null> => {
-  const result = await Country.findOne({ name: name });
+  const result = await Country.findOne({ name: name }).populate({path:"state",model:"State"});
   console.log('country', name);
   return result;
 };
@@ -54,9 +54,9 @@ const updateCountry = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Country not found !');
   }
 
-  const { ...CountryData } = payload;
+  const { ...countryData } = payload;
 
-  const updatedCountryData: Partial<ICountry> = { ...CountryData };
+  const updatedCountryData: Partial<ICountry> = { ...countryData };
 
   const result = await Country.findOneAndUpdate(
     { name: name },
@@ -64,6 +64,46 @@ const updateCountry = async (
     {
       new: true,
     }
+  );
+  return result;
+};
+const updateState = async (
+  name: string,
+  payload: Partial<ICountry>
+): Promise<ICountry | null> => {
+  const isExist = await Country.findOne({ name: name });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Country not found !');
+  }
+
+  const {state } = payload;
+const stateObj=await State.findOne({name:state})
+
+  const result = await Country.findOneAndUpdate(
+    { name: name },
+    { $push: { state: stateObj?._id  } }, 
+    { new: true } 
+  );
+  return result;
+};
+const deleteState = async (
+  name: string,
+  payload: Partial<ICountry>
+): Promise<ICountry | null> => {
+  const isExist = await Country.findOne({ name: name });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Country not found !');
+  }
+
+  const {state } = payload;
+const stateObj=await State.findOne({name:state})
+
+  const result = await Country.findOneAndUpdate(
+    { name: name },
+    { $pull: { state: stateObj?._id  } }, 
+    { new: true } 
   );
   return result;
 };
@@ -99,8 +139,8 @@ const deleteCountry = async (name: string): Promise<ICountry | any> => {
 
 export const CountryService = {
   getAllCountrys,
-  createCountry,
-  getSingleCountry,
+  createCountry,deleteState,
+  getSingleCountry,updateState,
   updateCountry,
   deleteCountry,
 };

@@ -45,6 +45,9 @@ export const SellerSchema = new Schema<ISeller, SellerModel>(
     profileImage: {
       type: String,
     },
+    membershipExpiration:{
+      type:Date,
+    },
     membership: {
       type: Schema.Types.ObjectId,
       ref: 'Membership',

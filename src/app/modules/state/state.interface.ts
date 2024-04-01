@@ -1,15 +1,14 @@
 import mongoose, { Model, Schema } from 'mongoose';
 
-export type ICountry = {
+export type IState = {
   _id: mongoose.Types.ObjectId;
   name: string;
-  city?: String[];
-  state?: Schema.Types.ObjectId[];
-  countryCode:string
+  ads: Schema.Types.ObjectId[];
+
 };
-export type CountryModel = {
-  isUserExist(name: string): Promise<Pick<ICountry, 'name'>>;
-} & Model<ICountry>;
+export type StateModel = {
+  isUserExist(name: string): Promise<Pick<IState, 'name'>>;
+} & Model<IState>;
 
 // export type IStudentFilters = {
 //   searchTerm?: string;
