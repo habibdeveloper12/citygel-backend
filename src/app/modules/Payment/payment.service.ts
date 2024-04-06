@@ -28,13 +28,13 @@ const createPayment = async (paymentData: any): Promise<IPayment | null> => {
     }
 
     // Create payment with Stripe
-    const charge = await stripe.charges.create({
-      amount: amount * 100,
-      currency: 'usd',
-      description: `Payment for ${membershipType} membership`,
-      source: token.id,
-    });
-    console.log(charge);
+    // const charge = await stripe.charges.create({
+    //   amount: amount * 100,
+    //   currency: 'usd',
+    //   description: `Payment for ${membershipType} membership`,
+    //   source: token.id,
+    // });
+    // console.log(charge);
 
     // Create a new payment document
     const userPayment = {
