@@ -7,7 +7,7 @@ import { ISubcategory } from './subcategory.interface';
 import { Subcategory } from './subcategory.model';
 
 const getAllSubcategorys = async (): Promise<ISubcategory[]> => {
-  const allSubcategory = Subcategory.find({});
+  const allSubcategory = Subcategory.find({}).populate('category');
   return allSubcategory;
 };
 const createSubcategory = async (
@@ -16,11 +16,10 @@ const createSubcategory = async (
   let newSubcategory: ISubcategory | null = null;
   const { name, category } = subcategory;
   // Find the category by name
-  const existingCategory = await Category.findOne({ name: category });
 
-  if (!existingCategory) {
-    throw new Error('Category not found');
-  }
+  // if (!existingCategory) {
+  //   throw new Error('Category not found');
+  // }
 
   // Start a Mongoose session for transaction
   const session = await mongoose.startSession();
@@ -32,7 +31,6 @@ const createSubcategory = async (
       [
         {
           name,
-          category: existingCategory._id,
         },
       ],
       { session }
@@ -44,12 +42,12 @@ const createSubcategory = async (
 
     newSubcategory = createdSubcategory[0];
 
-    for (const subcategory of createdSubcategory) {
-      await Category.updateOne(
-        { _id: existingCategory._id },
-        { $push: { subcategories: subcategory._id } }
-      );
-    }
+    // for (const subcategory of createdSubcategory) {
+    //   await Category.updateOne(
+    //     { _id: existingCategory._id },
+    //     { $push: { subcategories: subcategory._id } }
+    //   );
+    // }
 
     await session.commitTransaction();
   } catch (error) {
@@ -139,9 +137,9 @@ const deleteSubcategory = async (
       { session }
     );
 
-    if (!category) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Category not found!');
-    }
+    // if (!category) {
+    //   throw new ApiError(httpStatus.NOT_FOUND, 'Category not found!');
+    // }
 
     // Delete the subcategory
     await subcategory.deleteOne({ session });

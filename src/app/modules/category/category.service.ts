@@ -81,23 +81,16 @@ const deleteCategory = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'category not found !');
   }
 
-  const session = await mongoose.startSession();
-
   try {
-    session.startTransaction();
-    //delete Ads first
-    const category = await Ads.findOne({ category: name }, { session });
-    if (category) {
+    const categoryAds = await Ads.findOne({ category: isExist._id });
+    if (categoryAds) {
       throw new ApiError(404, 'Please delete all ads in this category');
     }
     //delete user
     await Category.deleteOne({ name });
-    session.commitTransaction();
-    session.endSession();
 
-    return category;
+    return categoryAds;
   } catch (error) {
-    session.abortTransaction();
     throw error;
   }
 };

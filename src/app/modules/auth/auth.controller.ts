@@ -11,11 +11,11 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
   // set refresh token into cookie
   const cookieOptions = {
-    secure: true,
+    secure: false,
     httpOnly: true,
   };
 
-  res.cookie('refreshToken', refreshToken, cookieOptions);
+  res.cookie('refreshToken', refreshToken);
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
@@ -31,11 +31,11 @@ const googgleLogin = catchAsync(async (req: Request, res: Response) => {
 
   // set refresh token into cookie
   const cookieOptions = {
-    secure: true,
+    secure: false,
     httpOnly: true,
   };
 
-  res.cookie('refreshToken', refreshToken);
+  res.cookie('refreshToken', refreshToken, cookieOptions);
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,

@@ -12,7 +12,6 @@ export const subcategorySchema = new Schema<ISubcategory, SubcategoryModel>(
     category: {
       type: Schema.Types.ObjectId,
       ref: 'Category', // Reference to Category model
-      required: true,
     },
     ads: [
       {

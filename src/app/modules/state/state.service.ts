@@ -7,15 +7,13 @@ import { IState } from './state.interface';
 import { State } from './state.model';
 
 const getAllStates = async (): Promise<IState[]> => {
-  const allState = State.find({}).populate({path:"ads",model:"Ads"});
+  const allState = State.find({}).populate({ path: 'ads', model: 'Ads' });
   return allState;
 };
-const createState = async (
-  subcategory: IState
-): Promise<IState | null> => {
+const createState = async (subcategory: IState): Promise<IState | null> => {
   let newState: IState | null = null;
   const { name } = subcategory;
-const myname=name.toLowerCase()
+  const myname = name.toLowerCase();
   // Start a Mongoose session for transaction
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -25,7 +23,7 @@ const myname=name.toLowerCase()
     const createdState = await State.create(
       [
         {
-          name:myname,
+          name: myname,
         },
       ],
       { session }
@@ -37,12 +35,11 @@ const myname=name.toLowerCase()
 
     newState = createdState[0];
 
-
     await session.commitTransaction();
   } catch (error) {
     // Rollback the transaction in case of error
     await session.abortTransaction();
-    console.error('Error creating subcategory:', error);
+    console.error('Error creating state:', error);
     throw error;
   } finally {
     // End the session
@@ -52,11 +49,11 @@ const myname=name.toLowerCase()
   return newState;
 };
 
-const getSingleState = async (
-  name: string
-): Promise<IState | null> => {
-  const result = await State.findOne({ name: name }).populate
-  ({path:"ads",model:"Ads"});
+const getSingleState = async (name: string): Promise<IState | null> => {
+  const result = await State.findOne({ name: name }).populate({
+    path: 'ads',
+    model: 'Ads',
+  });
   return result;
 };
 
@@ -95,19 +92,13 @@ const updateState = async (
   //   });
   // }
 
-  const result = await State.findOneAndUpdate(
-    { name },
-    updatedStateData,
-    {
-      new: true,
-    }
-  );
+  const result = await State.findOneAndUpdate({ name }, updatedStateData, {
+    new: true,
+  });
   return result;
 };
 
-const deleteState = async (
-  name: string
-): Promise<IState | null> => {
+const deleteState = async (name: string): Promise<IState | null> => {
   const session = await mongoose.startSession();
 
   try {
@@ -127,9 +118,9 @@ const deleteState = async (
       { session }
     );
 
-    if (!category) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Category not found!');
-    }
+    // if (!category) {
+    //   throw new ApiError(httpStatus.NOT_FOUND, 'Category not found!');
+    // }
 
     // Delete the subcategory
     await subcategory.deleteOne({ session });

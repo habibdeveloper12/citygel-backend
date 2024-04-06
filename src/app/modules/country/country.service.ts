@@ -39,7 +39,10 @@ const createCountry = async (country: ICountry): Promise<ICountry | null> => {
 };
 
 const getSingleCountry = async (name: string): Promise<ICountry | null> => {
-  const result = await Country.findOne({ name: name }).populate({path:"state",model:"State"});
+  const result = await Country.findOne({ name: name }).populate({
+    path: 'state',
+    model: 'State',
+  });
   console.log('country', name);
   return result;
 };
@@ -77,13 +80,13 @@ const updateState = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Country not found !');
   }
 
-  const {state } = payload;
-const stateObj=await State.findOne({name:state})
+  const { state } = payload;
+  const stateObj = await State.findOne({ name: state });
 
   const result = await Country.findOneAndUpdate(
     { name: name },
-    { $push: { state: stateObj?._id  } }, 
-    { new: true } 
+    { $push: { state: stateObj?._id } },
+    { new: true }
   );
   return result;
 };
@@ -97,13 +100,13 @@ const deleteState = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Country not found !');
   }
 
-  const {state } = payload;
-const stateObj=await State.findOne({name:state})
+  const { state } = payload;
+  const stateObj = await State.findOne({ name: state });
 
   const result = await Country.findOneAndUpdate(
     { name: name },
-    { $pull: { state: stateObj?._id  } }, 
-    { new: true } 
+    { $pull: { state: stateObj?._id } },
+    { new: true }
   );
   return result;
 };
@@ -139,8 +142,10 @@ const deleteCountry = async (name: string): Promise<ICountry | any> => {
 
 export const CountryService = {
   getAllCountrys,
-  createCountry,deleteState,
-  getSingleCountry,updateState,
+  createCountry,
+  deleteState,
+  getSingleCountry,
+  updateState,
   updateCountry,
   deleteCountry,
 };
