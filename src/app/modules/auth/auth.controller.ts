@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
@@ -12,7 +11,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
   // set refresh token into cookie
   const cookieOptions = {
-    secure: config.env === 'production',
+    secure: true,
     httpOnly: true,
   };
 
@@ -32,11 +31,11 @@ const googgleLogin = catchAsync(async (req: Request, res: Response) => {
 
   // set refresh token into cookie
   const cookieOptions = {
-    secure: config.env === 'production',
+    secure: true,
     httpOnly: true,
   };
 
-  res.cookie('refreshToken', refreshToken, cookieOptions);
+  res.cookie('refreshToken', refreshToken);
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
@@ -48,6 +47,28 @@ const googgleLogin = catchAsync(async (req: Request, res: Response) => {
 const sendCode = catchAsync(async (req: Request, res: Response) => {
   const { ...code } = req.body;
   const result = await AuthService.sendCode(code);
+
+  sendResponse<ILoginUserResponse>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Code sent to email!',
+    data: result,
+  });
+});
+const loginsendCode = catchAsync(async (req: Request, res: Response) => {
+  const { ...code } = req.body;
+  const result = await AuthService.loginsendCode(code);
+
+  sendResponse<ILoginUserResponse>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Code sent to email!',
+    data: result,
+  });
+});
+const signupsendCode = catchAsync(async (req: Request, res: Response) => {
+  const { ...code } = req.body;
+  const result = await AuthService.signupsendCode(code);
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
@@ -75,7 +96,8 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
   // set refresh token into cookie
   const cookieOptions = {
-    secure: config.env === 'production',
+    // secure: config.env === 'production',
+    secure: true,
     httpOnly: true,
   };
 
@@ -108,4 +130,6 @@ export const AuthController = {
   verifyCode,
   refreshToken,
   googgleLogin,
+  signupsendCode,
+  loginsendCode,
 };

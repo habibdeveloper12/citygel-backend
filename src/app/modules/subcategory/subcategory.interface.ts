@@ -4,6 +4,7 @@ export type ISubcategory = {
   _id: mongoose.Types.ObjectId;
   name: string;
   category: Schema.Types.ObjectId;
+  ads?: Schema.Types.ObjectId[];
   fields?: Schema.Types.ObjectId[];
 };
 export type SubcategoryModel = {

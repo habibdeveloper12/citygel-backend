@@ -7,14 +7,20 @@ export const fieldSchema = new Schema<IField, FieldModel>(
       type: String,
       required: true,
     },
+    label: {
+      type: String,
+    },
     subcategory: {
       type: Schema.Types.ObjectId,
       ref: 'Subcategory',
       required: true,
     },
+    parameter: {
+      type: String,
+    },
     type: {
       type: String,
-      enum: ['text', 'textarea', 'select'],
+      enum: ['text', 'textarea', 'number', 'select'],
     },
     options: [String],
   },

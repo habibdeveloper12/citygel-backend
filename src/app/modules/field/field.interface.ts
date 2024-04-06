@@ -2,8 +2,10 @@ import { Model, Schema } from 'mongoose';
 
 export type IField = {
   name: string;
+  parameter: string;
   subcategory: Schema.Types.ObjectId;
-  type: 'text' | 'textarea' | 'select';
+  type: 'text' | 'textarea' | 'select' | 'number';
+  label?: string;
   options?: string[];
 };
 export type FieldModel = {

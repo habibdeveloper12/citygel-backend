@@ -6,71 +6,6 @@
     "auditLog": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\.147ac0a93dd0b85b5b022e5e492a550a1a743d58-audit.json",
     "files": [
         {
-            "date": 1710796899514,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-03-error.log",
-            "hash": "1564c96292a3df251490f5f05a47f7239b6accf943ea9ac7a6316a5e194e101f"
-        },
-        {
-            "date": 1710828513261,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-12-error.log",
-            "hash": "5e399b6e3c67eb085197849c43998e4187211c0ee787e1fbbb356a9735495d8a"
-        },
-        {
-            "date": 1710832265429,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-13-error.log",
-            "hash": "8b6aa7932b3f6c6cb685d142c9fded4541901ed401214e26b0b98ea1d6e5e1b3"
-        },
-        {
-            "date": 1710842322601,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-15-error.log",
-            "hash": "50e0d678f2147cc8fe09ded1a6f3796d53ffceba03864d9c0cc9629c2b2e4117"
-        },
-        {
-            "date": 1710844874954,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-16-error.log",
-            "hash": "f4378db6ba5c281b1eeda7f13829a0ec7e85cb06298fd92f28b32f260d48d581"
-        },
-        {
-            "date": 1710855198959,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-19-03-19-error.log",
-            "hash": "12b07181a0d30a387aae65af184621985475e4c0f5a4eccf074b44d8c3e94dc7"
-        },
-        {
-            "date": 1710922395424,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-20-03-14-error.log",
-            "hash": "e3d958a084750aca10a0681f09076a8fbd9d4e29dda23f093fb6292d6b4fa0bf"
-        },
-        {
-            "date": 1711015549701,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-21-03-16-error.log",
-            "hash": "0c9aaac90282dfe8c1096cd71d729270f708411fd3d3cb8a1bc9bf2d28aa7e75"
-        },
-        {
-            "date": 1711102135701,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-22-03-16-error.log",
-            "hash": "d3217f92b62c6fccb6b8e7f2873f6895f7a07abd130ecec29b46a40e51004603"
-        },
-        {
-            "date": 1711114241506,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-22-03-19-error.log",
-            "hash": "b4779f1f20af9b16bf5f105097ce12e188ec5c1fac77a61ca8c25899a0662a3a"
-        },
-        {
-            "date": 1711116065762,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-22-03-20-error.log",
-            "hash": "a7d0a700c1f68b00f8a4ff3bddf29dc2eb197cce603ad01c720784818f2807fa"
-        },
-        {
-            "date": 1711119736003,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-22-03-21-error.log",
-            "hash": "abe5d9071acf9b22ea9777eb1354fbe176b6e318dac916b450ffb9ff07a641e8"
-        },
-        {
-            "date": 1711170179530,
-            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-23-03-11-error.log",
-            "hash": "0d94551f4afa41d4a8c23996a0ce1d65f2cbb912e27dcfc03f9d22f418a5efeb"
-        },
-        {
             "date": 1711176982654,
             "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-23-03-12-error.log",
             "hash": "424ee7c28d8aa21ab79960fd5bc2f0ee7788c7affc1819fadc68dc7786057b54"
@@ -194,6 +129,96 @@
             "date": 1712002884885,
             "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-02-04-02-error.log",
             "hash": "ddb196e424bb1e2e8429427d1c5fcb4fd6ca65db3c0e0370efe9c08e781ef12e"
+        },
+        {
+            "date": 1712059251651,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-02-04-18-error.log",
+            "hash": "7a98b5f470fb74abd8f41751e2845843a3ecf6083b26903b7d44e9aa4575dc45"
+        },
+        {
+            "date": 1712067899116,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-02-04-20-error.log",
+            "hash": "d5c4a1095bf54d0e4e269050fdb7c61c9566efe64dce8c25d8c6d3c67944fc79"
+        },
+        {
+            "date": 1712094092962,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-03-error.log",
+            "hash": "9807c9db2208775cc4ae4e3d25282ca550be25a94eca6ad2bcd9904b7204f847"
+        },
+        {
+            "date": 1712125562876,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-12-error.log",
+            "hash": "13eec547540144eb114d63fda152318176774376c8887305ee9f934af911ad6b"
+        },
+        {
+            "date": 1712141408949,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-16-error.log",
+            "hash": "b1d5231f671782a6af7c8f2a541c930560a3085f8ff2aece40ce800db0f2c629"
+        },
+        {
+            "date": 1712142137528,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-17-error.log",
+            "hash": "c09ef3b29b34a9946c6bc938c498295faad4cf992b5a804db1c5f4eb304860ef"
+        },
+        {
+            "date": 1712151607847,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-19-error.log",
+            "hash": "3f28d03ed0fec39ec83ee26099f88b1c1303767cc64c8215cce97ad18476f15d"
+        },
+        {
+            "date": 1712152840836,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-20-error.log",
+            "hash": "d20af8c610ff56c896979860f5f6d6e58fc772c4f4ea1f22d3b0bf9735256184"
+        },
+        {
+            "date": 1712167188997,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-03-04-23-error.log",
+            "hash": "b10d8b6d2a07ac69d468b5a5023223d17a81143a20566cf557c85805302cd448"
+        },
+        {
+            "date": 1712167208138,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-04-04-00-error.log",
+            "hash": "859c86468817f468b7b53692c1bc48a94958281fbe3f77437f5824fdec6a2cf3"
+        },
+        {
+            "date": 1712179284798,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-04-04-03-error.log",
+            "hash": "4a1ff39f3e200ae509bd8f13b934aa2caa477289c927d805c55bed77d771cb36"
+        },
+        {
+            "date": 1712207680482,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-04-04-11-error.log",
+            "hash": "8bc40de783f77482577364fe3d1bf09ef7fe4e9fbbc718be13f829d516fbf4d6"
+        },
+        {
+            "date": 1712249480929,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-04-04-22-error.log",
+            "hash": "0b3fb933be2494d955c010941681b5b286cfbabe915fb8031dbca81810104f99"
+        },
+        {
+            "date": 1712252338357,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-04-04-23-error.log",
+            "hash": "425ba63649d6ef4834f4664cfa75922176f9a62264bccb7551ad01a1676e775c"
+        },
+        {
+            "date": 1712327210193,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-05-04-20-error.log",
+            "hash": "868ecba77de5aac70834d76094892a14b5fbbb01d7dec34689badd26c6f46a48"
+        },
+        {
+            "date": 1712329201072,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-05-04-21-error.log",
+            "hash": "09bea205ae9b47cde13a847377314cbcf970e80352e5b4189c6b401f234604cf"
+        },
+        {
+            "date": 1712352248873,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-06-04-03-error.log",
+            "hash": "40d7c2584b20d671b3c7a92321e5e61b0e9f411434709caf300f562113beba14"
+        },
+        {
+            "date": 1712384321989,
+            "name": "F:\\citygel\\citygel-backend\\logs\\winston\\errors\\phu-2024-06-04-12-error.log",
+            "hash": "638e21991c903767202b016a2ee9fba7f86f0f063cf8953ae518c945d3cc3c63"
         }
     ],
     "hashType": "sha256"

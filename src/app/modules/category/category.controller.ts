@@ -63,7 +63,7 @@ const deleteCategory = catchAsync(async (req: Request, res: Response) => {
 
   const result = await CategoryService.deleteCategory(name);
 
-  sendResponse<ICategory>(res, {
+  sendResponse<ICategory | any>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Category deleted successfully !',

@@ -7,41 +7,132 @@ import { IField } from './field.interface';
 import { Field } from './field.model';
 
 const getAllFields = async (): Promise<IField[]> => {
-  const allField = Field.find({});
+  const allField = Field.find({}).populate('subcategory');
   return allField;
 };
-const createField = async (field: IField): Promise<IField | null> => {
-  let newField: any;
-  const { name, type, subcategory, options } = field;
-  const subcategoryId = await Subcategory.findOne({ name: subcategory });
-  // Start a Mongoose session for transaction
-  console.log(subcategoryId);
-  const alreadyField = await Field.findOne({ name: name });
-
+const createField = async (field: IField): Promise<any | null> => {
   try {
-    if (!alreadyField) {
-      newField = await Field.create({
-        name: name.toLocaleLowerCase,
-        subcategory: subcategoryId?._id,
-        type: type,
-        options: options,
-      });
-    } else {
-      throw new ApiError(500, 'This select option already exist');
-    }
-
-    // Update the associated subcategory with the new field's _id
-    const updatedSubcategory = await Subcategory.findOneAndUpdate(
-      { name: subcategory },
-      { $push: { fields: newField._id } },
-      { new: true }
-    );
-
-    if (!updatedSubcategory) {
+    const { type, subcategory, options, ...data } = field;
+    const subcategoryId = await Subcategory.findOne({ name: subcategory });
+    if (!subcategoryId) {
       throw new Error('Subcategory not found');
     }
 
-    return newField;
+    const alreadyField = await Field.findOne({
+      name: data.name,
+      subcategory: subcategoryId._id,
+    });
+    if (alreadyField) {
+      throw new ApiError(500, 'This field already exists');
+    }
+
+    switch (type) {
+      case 'select':
+        {
+          const newField = await Field.create({
+            name: data.name.toLowerCase(),
+            subcategory: subcategoryId._id,
+            type: type,
+            label: data.label,
+
+            options: options,
+          });
+
+          // Update the associated subcategory with the new field's _id
+
+          const updatedThereSubcategory = await Subcategory.findOneAndUpdate(
+            { name: subcategory },
+            { $push: { fields: newField._id } }, // Use $each to push multiple values
+            { new: true }
+          );
+          if (!updatedThereSubcategory) {
+            throw new Error('Subcategory not found');
+          }
+        }
+        break;
+      case 'number':
+        {
+          const createNumber = await Promise.all(
+            data.number.map(async element => {
+              const newField = await Field.create({
+                name: element.name.toLowerCase(),
+                subcategory: subcategoryId._id,
+                type: type,
+                label: element.label,
+                parameter: element.parameter,
+                options: options,
+              });
+              return newField;
+            })
+          );
+          // Update the associated subcategory with the new field's _id
+          const fieldNumberIds = createNumber.map(
+            (field: { _id: any }) => field._id
+          );
+          const updatedThereSubcategory = await Subcategory.findOneAndUpdate(
+            { name: subcategory },
+            { $push: { fields: { $each: fieldNumberIds } } }, // Use $each to push multiple values
+            { new: true }
+          );
+          if (!updatedThereSubcategory) {
+            throw new Error('Subcategory not found');
+          }
+        }
+        break;
+      case 'textarea':
+        const createData = await Promise.all(
+          data.textarea.map(async element => {
+            const newField = await Field.create({
+              name: element.name.toLowerCase(),
+              subcategory: subcategoryId._id,
+              type: type,
+              label: element.label,
+              parameter: element.parameter,
+              options: options,
+            });
+            return newField;
+          })
+        );
+        // Update the associated subcategory with the new field's _id
+        const fieldIds = createData.map((field: { _id: any }) => field._id);
+        const updatedSubcategory = await Subcategory.findOneAndUpdate(
+          { name: subcategory },
+          { $push: { fields: { $each: fieldIds } } }, // Use $each to push multiple values
+          { new: true }
+        );
+        if (!updatedSubcategory) {
+          throw new Error('Subcategory not found');
+        }
+
+        break;
+      default: {
+        // Create field for type 'text'
+        const createData = await Promise.all(
+          data.text.map(async element => {
+            const newField = await Field.create({
+              name: element.name.toLowerCase(),
+              subcategory: subcategoryId._id,
+              type: type,
+              label: element.label,
+              parameter: element.parameter,
+              options: options,
+            });
+            return newField;
+          })
+        );
+        // Update the associated subcategory with the new field's _id
+        const fieldIds = createData.map((field: { _id: any }) => field._id);
+        const updatedSubcategory = await Subcategory.findOneAndUpdate(
+          { name: subcategory },
+          { $push: { fields: { $each: fieldIds } } }, // Use $each to push multiple values
+          { new: true }
+        );
+        if (!updatedSubcategory) {
+          throw new Error('Subcategory not found');
+        }
+        return createData;
+      }
+    }
   } catch (error) {
     // Rollback the transaction in case of error
 

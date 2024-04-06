@@ -19,6 +19,7 @@ const createCategory = async (
 ): Promise<ICategory | null> => {
   let newCategory: ICategory | null = null;
   category.name = category.name.toLowerCase();
+
   const session = await mongoose.startSession();
   session.startTransaction();
 

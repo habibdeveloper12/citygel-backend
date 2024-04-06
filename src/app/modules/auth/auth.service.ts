@@ -123,6 +123,98 @@ const sendCode = async (payload: any): Promise<any> => {
     console.error('Failed to save verification code:', error);
   }
 };
+const loginsendCode = async (payload: any): Promise<any> => {
+  const { email } = payload;
+  const findUser = await Seller.isUserExist(email);
+  if (!findUser) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'this email not found please signup'
+    );
+  }
+
+  const code = generateCode();
+  const transporter = nodemailer.createTransport({
+    service: 'other',
+    host: 'smtp.hostinger.com',
+    port: 465,
+    auth: {
+      user: 'test@ctobbd.com',
+      pass: 'Habib12345@#',
+    },
+  });
+  try {
+    const verification = new Validation({ email, code });
+    await verification.save();
+
+    const mailOptions = {
+      from: 'test@ctobbd.com',
+      to: email,
+      subject: 'Verification Code',
+      text: `Your verification code is: ${code}`,
+    };
+
+    transporter.sendMail(
+      mailOptions,
+      (error: any, info: { response: string }) => {
+        if (error) {
+          console.log(error);
+          throw new ApiError(httpStatus.BAD_REQUEST, 'code not sent');
+        }
+      }
+    );
+    console.log(transporter);
+    return verification;
+  } catch (error) {
+    console.error('Failed to save verification code:', error);
+  }
+};
+const signupsendCode = async (payload: any): Promise<any> => {
+  const { email } = payload;
+  const findUser = await Seller.isUserExist(email);
+  if (findUser) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'this email is already signup please sign in'
+    );
+  }
+
+  const code = generateCode();
+  const transporter = nodemailer.createTransport({
+    service: 'other',
+    host: 'smtp.hostinger.com',
+    port: 465,
+    auth: {
+      user: 'test@ctobbd.com',
+      pass: 'Habib12345@#',
+    },
+  });
+  try {
+    const verification = new Validation({ email, code });
+    await verification.save();
+
+    const mailOptions = {
+      from: 'test@ctobbd.com',
+      to: email,
+      subject: 'CityGel Verification Code',
+      text: `Here is Citygel  verification code is: ${code}`,
+    };
+
+    transporter.sendMail(
+      mailOptions,
+      (error: any, info: { response: string }) => {
+        if (error) {
+          console.log(error);
+          throw new ApiError(httpStatus.BAD_REQUEST, 'code not sent');
+        }
+      }
+    );
+    console.log(transporter);
+    return verification;
+  } catch (error) {
+    console.error('Failed to save verification code:', error);
+  }
+};
 const verifyCode = async (payload: any): Promise<any> => {
   const { email, code } = payload;
   console.log(email, code, 'dfffffffffffffff');
@@ -225,7 +317,9 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 export const AuthService = {
   loginUser,
   verifyCode,
+  loginsendCode,
   sendCode,
   refreshToken,
   googgleLogin,
+  signupsendCode,
 };

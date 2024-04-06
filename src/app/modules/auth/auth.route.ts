@@ -5,6 +5,8 @@ import { AuthValidation } from './auth.validation';
 const router = express.Router();
 
 router.post('/send-code', AuthController.sendCode);
+router.post('/login-send-code', AuthController.loginsendCode);
+router.post('/signup-send-code', AuthController.signupsendCode);
 router.post('/verify-code', AuthController.verifyCode);
 router.post(
   '/login',

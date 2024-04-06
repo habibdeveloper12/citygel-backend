@@ -3,6 +3,7 @@ import mongoose, { Model, Schema } from 'mongoose';
 export type ICategory = {
   _id: mongoose.Types.ObjectId;
   name: string;
+  ads?: Schema.Types.ObjectId[];
   subcategories?: Schema.Types.ObjectId[];
 };
 export type CategoryModel = {

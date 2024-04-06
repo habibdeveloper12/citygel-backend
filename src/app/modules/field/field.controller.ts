@@ -7,8 +7,9 @@ import { FieldService } from './field.service';
 
 const createField = catchAsync(async (req: Request, res: Response) => {
   const { ...field } = req.body;
-  const result = await FieldService.createField(field);
   console.log(field, 'dffdf');
+  const result = await FieldService.createField(field);
+
   sendResponse<IField>(res, {
     statusCode: httpStatus.OK,
     success: true,
