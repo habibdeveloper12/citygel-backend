@@ -119,23 +119,17 @@ const deleteCountry = async (name: string): Promise<ICountry | any> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'country not found !');
   }
 
-  const session = await mongoose.startSession();
-
   try {
-    session.startTransaction();
     //delete Ads first
-    const country = await Ads.findOne({ country: name }, { session });
+    const country = await Ads.findOne({ country: name });
     if (country) {
       throw new ApiError(404, 'Please delete all ads in this country');
     }
     //delete user
     await Country.deleteOne({ name });
-    session.commitTransaction();
-    session.endSession();
 
     // return country;
   } catch (error) {
-    session.abortTransaction();
     throw error;
   }
 };

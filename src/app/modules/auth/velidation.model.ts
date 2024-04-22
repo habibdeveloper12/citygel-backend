@@ -9,7 +9,7 @@ interface IValidation extends Document {
 const validationSchema = new Schema<IValidation>({
   email: { type: String, required: true },
   code: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now, expires: 120 }, // Expires after 2 minutes
+  createdAt: { type: Date, default: Date.now, expires: 600 }, // Expires after 2 minutes
 });
 
 export const Validation = model<IValidation>('Validation', validationSchema);
